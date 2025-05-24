@@ -3,15 +3,35 @@ import { ScrollView, View, Text, Image, StyleSheet, TouchableWithoutFeedback } f
 
 export default function App() {
   const [pressedIcon, setPressedIcon] = useState(null);
+  const [selectedTab, setSelectedTab] = useState('All');
 
   const handlePress = (name) => {
     setPressedIcon(name);
+    if (['All', 'Music', 'Podcasts', 'Audiobooks'].includes(name)) {
+      setSelectedTab(name);
+    }
     setTimeout(() => setPressedIcon(null), 200);
   };
 
   const audiobookItems = [
-    { name: 'audio1', source: require('./assets/audio1.png') },
-    { name: 'audio2', source: require('./assets/audio2.png') },
+    {
+      name: 'book1',
+      source: require('./assets/audio1.png'),
+      title: 'The Power of Habit',
+      author: 'Charles Duhigg',
+    },
+    {
+      name: 'book2',
+      source: require('./assets/audio2.png'),
+      title: 'Atomic Habits',
+      author: 'James Clear',
+    },
+    {
+      name: 'book3',
+      source: require('./assets/audio3.png'),
+      title: 'Can not Hurt Me',
+      author: 'David Goggins',
+    },
   ];
 
   return (
@@ -25,14 +45,13 @@ export default function App() {
 
         {['All', 'Music', 'Podcasts', 'Audiobooks'].map((label, index) => (
           <TouchableWithoutFeedback key={index} onPress={() => handlePress(label)}>
-            <View style={[styles.tabButton, label === 'All' && styles.activeTab, pressedIcon === label && styles.pressedWrapper]}>
+            <View style={[styles.tabButton, selectedTab === label && styles.activeTab, pressedIcon === label && styles.pressedWrapper]}>
               <Text style={styles.tabText}>{label}</Text>
             </View>
           </TouchableWithoutFeedback>
         ))}
       </View>
 
-      
       <View style={styles.gridContainer}>
         {[
           'Hot Hits Canada', 'Pop Favourites',
@@ -48,6 +67,7 @@ export default function App() {
           </TouchableWithoutFeedback>
         ))}
       </View>
+
       <Text style={styles.sectionTitle}>Recents</Text>
       <View style={styles.recentsGrid}>
         {[
@@ -63,23 +83,18 @@ export default function App() {
           </TouchableWithoutFeedback>
         ))}
       </View>
+
       <Text style={styles.sectionTitle}>Audiobooks for you</Text>
-
-      <View style={styles.audioRow}>
+      <View style={styles.audioGrid}>
         {audiobookItems.map((item) => (
-          <TouchableWithoutFeedback key={`row1-${item.name}`} onPress={() => handlePress(item.name)}>
-            <View style={[styles.audioWrapper, pressedIcon === item.name && styles.pressedWrapper]}>
+          <TouchableWithoutFeedback key={item.name} onPress={() => handlePress(item.name)}>
+            <View style={[styles.audioCard, pressedIcon === item.name && styles.pressedWrapper]}>
               <Image source={item.source} style={styles.audioImage} />
-            </View>
-          </TouchableWithoutFeedback>
-        ))}
-      </View>
-
-      <View style={styles.audioRow}>
-        {audiobookItems.map((item) => (
-          <TouchableWithoutFeedback key={`row2-${item.name}`} onPress={() => handlePress(item.name)}>
-            <View style={[styles.audioWrapper, pressedIcon === item.name && styles.pressedWrapper]}>
-              <Image source={item.source} style={styles.audioImage} />
+              <View style={styles.audioTextBlock}>
+                <Text style={styles.premiumLabel}>Included in Premium</Text>
+                <Text style={styles.audioTitle} numberOfLines={1}>{item.title}</Text>
+                <Text style={styles.audioAuthor}>{item.author}</Text>
+              </View>
             </View>
           </TouchableWithoutFeedback>
         ))}
@@ -187,21 +202,38 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#222',
   },
-  audioRow: {
+  audioGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 10,
+    gap: 12,
     marginBottom: 30,
   },
-  audioWrapper: {
+  audioCard: {
     width: '48%',
-    height: 100,
-    borderRadius: 10,
+    backgroundColor: '#111',
+    borderRadius: 12,
     overflow: 'hidden',
   },
   audioImage: {
     width: '100%',
-    height: '100%',
-    borderRadius: 10,
+    height: 120,
+  },
+  audioTextBlock: {
+    padding: 8,
+  },
+  premiumLabel: {
+    color: '#2ecc71',
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  audioTitle: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  audioAuthor: {
+    color: '#aaa',
+    fontSize: 12,
   },
 });
