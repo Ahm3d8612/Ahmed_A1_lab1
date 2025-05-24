@@ -16,7 +16,6 @@ export default function App() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Top Tabs */}
       <View style={styles.tabsRow}>
         <TouchableWithoutFeedback onPress={() => handlePress('apple')}>
           <View style={[styles.iconWrapper, pressedIcon === 'apple' && styles.pressedWrapper]}>
@@ -33,7 +32,7 @@ export default function App() {
         ))}
       </View>
 
-      {/* Grid of Playlists */}
+      
       <View style={styles.gridContainer}>
         {[
           'Hot Hits Canada', 'Pop Favourites',
@@ -49,8 +48,6 @@ export default function App() {
           </TouchableWithoutFeedback>
         ))}
       </View>
-
-      {/* Recents Section */}
       <Text style={styles.sectionTitle}>Recents</Text>
       <View style={styles.recentsGrid}>
         {[
@@ -66,8 +63,6 @@ export default function App() {
           </TouchableWithoutFeedback>
         ))}
       </View>
-
-      {/* Audiobooks Section */}
       <Text style={styles.sectionTitle}>Audiobooks for you</Text>
 
       <View style={styles.audioRow}>
