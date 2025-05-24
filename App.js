@@ -1,20 +1,212 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, View, Text, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 
 export default function App() {
+  const [pressedIcon, setPressedIcon] = useState(null);
+
+  const handlePress = (name) => {
+    setPressedIcon(name);
+    setTimeout(() => setPressedIcon(null), 200);
+  };
+
+  const audiobookItems = [
+    { name: 'audio1', source: require('./assets/audio1.png') },
+    { name: 'audio2', source: require('./assets/audio2.png') },
+  ];
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ScrollView style={styles.container}>
+      {/* Top Tabs */}
+      <View style={styles.tabsRow}>
+        <TouchableWithoutFeedback onPress={() => handlePress('apple')}>
+          <View style={[styles.iconWrapper, pressedIcon === 'apple' && styles.pressedWrapper]}>
+            <Image source={require('./assets/apple.png')} style={styles.tabIcon} />
+          </View>
+        </TouchableWithoutFeedback>
+
+        {['All', 'Music', 'Podcasts', 'Audiobooks'].map((label, index) => (
+          <TouchableWithoutFeedback key={index} onPress={() => handlePress(label)}>
+            <View style={[styles.tabButton, label === 'All' && styles.activeTab, pressedIcon === label && styles.pressedWrapper]}>
+              <Text style={styles.tabText}>{label}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        ))}
+      </View>
+
+      {/* Grid of Playlists */}
+      <View style={styles.gridContainer}>
+        {[
+          'Hot Hits Canada', 'Pop Favourites',
+          'Hip-Hop Central', '80s Hard Rock',
+          'All About Country', 'Upbeat mix',
+          'Daily Wellness', 'Release Radar'
+        ].map((title, index) => (
+          <TouchableWithoutFeedback key={index} onPress={() => handlePress(title)}>
+            <View style={[styles.gridItem, pressedIcon === title && styles.pressedWrapper]}>
+              <Image source={require('./assets/music_icon.png')} style={styles.gridIcon} />
+              <Text style={styles.gridLabel}>{title}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        ))}
+      </View>
+
+      {/* Recents Section */}
+      <Text style={styles.sectionTitle}>Recents</Text>
+      <View style={styles.recentsGrid}>
+        {[
+          'Pop mix', 'Hot Hits', 'Upbeat Mix',
+          'Daily Wellness', 'Hip-Hop Central', '80s Hard Rock'
+        ].map((title, index) => (
+          <TouchableWithoutFeedback key={index} onPress={() => handlePress(title)}>
+            <View style={[styles.recentItem, pressedIcon === title && styles.pressedWrapper]}>
+              <Image source={require('./assets/music_icon.png')} style={styles.recentImage} />
+              <Text style={styles.recentTitle}>{title}</Text>
+              <Text style={styles.recentMeta}>Playlist  ·  User 1</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        ))}
+      </View>
+
+      {/* Audiobooks Section */}
+      <Text style={styles.sectionTitle}>Audiobooks for you</Text>
+
+      <View style={styles.audioRow}>
+        {audiobookItems.map((item) => (
+          <TouchableWithoutFeedback key={`row1-${item.name}`} onPress={() => handlePress(item.name)}>
+            <View style={[styles.audioWrapper, pressedIcon === item.name && styles.pressedWrapper]}>
+              <Image source={item.source} style={styles.audioImage} />
+            </View>
+          </TouchableWithoutFeedback>
+        ))}
+      </View>
+
+      <View style={styles.audioRow}>
+        {audiobookItems.map((item) => (
+          <TouchableWithoutFeedback key={`row2-${item.name}`} onPress={() => handlePress(item.name)}>
+            <View style={[styles.audioWrapper, pressedIcon === item.name && styles.pressedWrapper]}>
+              <Image source={item.source} style={styles.audioImage} />
+            </View>
+          </TouchableWithoutFeedback>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#000',
+    padding: 16,
     flex: 1,
-    backgroundColor: '#fff',
+  },
+  tabsRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    marginBottom: 16,
+    gap: 8,
+  },
+  tabIcon: {
+    width: 28,
+    height: 28,
+    resizeMode: 'contain',
+  },
+  iconWrapper: {
+    borderRadius: 20,
+    padding: 4,
+  },
+  tabButton: {
+    backgroundColor: '#333',
+    borderRadius: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  activeTab: {
+    backgroundColor: '#2ecc71',
+  },
+  tabText: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  pressedWrapper: {
+    opacity: 0.6,
+    transform: [{ scale: 0.96 }],
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  gridItem: {
+    width: '48%',
+    backgroundColor: '#333',
+    borderRadius: 10,
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  gridIcon: {
+    width: 32,
+    height: 32,
+    tintColor: '#4fc3f7',
+  },
+  gridLabel: {
+    color: '#bbb',
+    fontSize: 14,
+    flexShrink: 1,
+  },
+  sectionTitle: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  recentsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 10,
+    marginBottom: 24,
+  },
+  recentItem: {
+    width: '30%',
+    backgroundColor: '#4fc3f7',
+    borderRadius: 8,
+    padding: 6,
+    alignItems: 'center',
+  },
+  recentImage: {
+    width: '100%',
+    height: 80,
+    marginBottom: 4,
+    borderRadius: 6,
+  },
+  recentTitle: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    color: '#fff',
+  },
+  recentMeta: {
+    fontSize: 10,
+    color: '#222',
+  },
+  audioRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+    marginBottom: 30,
+  },
+  audioWrapper: {
+    width: '48%',
+    height: 100,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  audioImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
   },
 });
